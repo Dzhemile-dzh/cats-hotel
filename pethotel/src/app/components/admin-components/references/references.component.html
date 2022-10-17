@@ -1,0 +1,85 @@
+<div class="container">
+  <div class="form-group mt-4">
+    <h3>Справки</h3>
+    <hr>
+  </div>
+  <div class="form-group">
+    <div class="border-bottom">
+      <span>Критерии</span>
+    </div>
+    <div class="row mt-2">
+      <div class="col-3">
+          <small class="mr-sm-2">Изберете месец</small>
+          <select [(ngModel)]="referenceBindingModel.month" class="custom-select">
+            <option></option>
+            <option value="1">Януари</option>
+            <option value="2">Февруари</option>
+            <option value="3">Март</option>
+            <option value="4">Април</option>
+            <option value="5">Май</option>
+            <option value="6">Юни</option>
+            <option value="7">Юли</option>
+            <option value="8">Август</option>
+            <option value="9">Септември</option>
+            <option value="10">Октомври</option>
+            <option value="11">Ноември</option>
+            <option value="12">Декември</option>
+          </select>
+      </div>
+      <div *ngIf="rooms | async as rooms" class="col-2">
+          <small class="mr-sm-2">Стая</small>
+          <select [(ngModel)]="referenceBindingModel.roomName" class="custom-select">
+            <option></option>
+            <option *ngFor="let room of rooms" [value]="room.name">{{room.name}}</option>
+          </select>
+      </div>
+      <div class="col-3">
+          <small class="mr-sm-2">Стойност над</small>
+          <input [(ngModel)]="referenceBindingModel.price" type="number">
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="offset-1 col-2">
+        <input class="form-check-input" type="radio" name="exampleRadios" (change)="onPetChange(1)" id="exampleRadios1" value="1">
+        <label class="form-check-label" for="exampleRadios1">
+          Куче
+        </label>
+      </div>
+      <div class="col-3">
+        <input class="form-check-input" type="radio" name="exampleRadios" (change)="onPetChange(2)" id="exampleRadios2" value="2">
+        <label class="form-check-label" for="exampleRadios2">
+          Котка
+        </label>
+      </div>
+      <div class="col-3">
+        <input class="form-check-input" type="radio" name="exampleRadios" (change)="onPetChange(3)" id="exampleRadios3" value="3">
+        <label class="form-check-label" for="exampleRadios3">
+          Друго
+        </label>
+      </div>
+      <div class="col-3">
+        <button (click)="onShowButtonClicked()" class="btn">Изведи</button>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="border-bottom">
+      <span>Резултат</span>
+      <div class="mb-6" style="margin-bottom: 40px;">
+        <kendo-grid [kendoGridBinding]="referenceResult | async" [pageSize]="4" [pageable]="true" [sortable]="true" height="auto">
+          <kendo-grid-column field="referenceResult.month" title="Месец" width="60">
+            <ng-template kendoGridCellTemplate let-result>
+              <span>{{result.month}}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column field="referenceResult.petType" title="Животно" width="180">
+          </kendo-grid-column>
+          <kendo-grid-column field="referenceResult.roomName" title="Стая" width="80">
+          </kendo-grid-column>
+          <kendo-grid-column field="referenceResult.price" title="Стойност" width="80">
+          </kendo-grid-column>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="container" style="margin-bottom: 80px !important;">
+  <div class="row">
+    <div class="form-group col-12">
+      <h3 *ngIf="!isSecondResStep">Резервация - стъпка 1</h3>
+      <h3 *ngIf="isSecondResStep">Резервация - стъпка 2</h3>
+      <hr>
+    </div>
+  </div>
+  <div class="form-group">
+    <div *ngIf="!isSecondResStep" class="row">
+      <div class="col-12 col-sm-2">
+        <span>Изберете период за престой</span>
+      </div>
+      <div class="col-12 col-sm-5">
+        <kendo-daterange>
+          <label>
+            <span class="label">Начална дата</span>
+            <kendo-dateinput kendoDateRangeStartInput [(value)]="range.start"></kendo-dateinput>
+          </label>
+          <label>
+            <span class="label">Крайна дата</span>
+            <kendo-dateinput kendoDateRangeEndInput [(value)]="range.end"></kendo-dateinput>
+          </label>
+        </kendo-daterange>
+      </div>
+      <div class="col-12 col-sm-2">
+        <label for="roomType" class="label">Стая</label>
+        <select style="width: 100%" name="" id="roomType" [(ngModel)]="filter.roomType">
+          <option></option>
+          <option value="1">ВИП</option>
+          <option value="2">Стандарт</option>
+        </select>
+      </div>
+      <div class="col-12 col-sm-2 mt-3">
+        <button (click)="onFindButtonClicked()" class="btn">Търси</button>
+      </div>
+    </div>
+    <div *ngIf="!isSecondResStep" class="row">
+      <hr class="col-12">
+      <div class="col-12 col-sm-7">
+          <label for="" class="label">Резултат</label>
+          <kendo-grid
+            [kendoGridBinding]="filteredReservations | async"
+            [pageSize]="4"
+            [pageable]="true"
+            [selectable]="selectableSettings"
+            [kendoGridSelectBy]="'roomId'"
+            [selectedKeys]="roomsIds">
+            <kendo-grid-checkbox-column [width]="60"></kendo-grid-checkbox-column>
+            <kendo-grid-column field="roomName" title="Име на стаята"></kendo-grid-column>
+            <kendo-grid-column field="roomType" title="Тип стая">
+                <ng-template kendoGridCellTemplate let-room>
+                    <span *ngIf="room.roomType === 1">ВИП</span>
+                    <span *ngIf="room.roomType !== 1">Стандарт</span>
+                  </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="roomPrice" title="Цена"></kendo-grid-column>
+        </kendo-grid>
+      </div>
+      <div class="col-12 col-sm-4">
+        <label for="" class="label">Екстри</label>
+        <kendo-grid [kendoGridBinding]="extras | async" [pageSize]="4" [pageable]="true" [selectable]="true" [kendoGridSelectBy]="'id'"
+          [selectedKeys]="extrasIds">
+          <kendo-grid-checkbox-column showSelectAll="true" [width]="60"></kendo-grid-checkbox-column>
+          <kendo-grid-column field="name" title="Екстра"></kendo-grid-column>
+          <kendo-grid-column field="price" title="Цена"></kendo-grid-column>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="isSecondResStep" class="col-12 col-sm-6">
+      <div class="container">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Вашите имена..." [(ngModel)]="reservationBindingModel.name" >
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Вашият имейл..." [(ngModel)]="reservationBindingModel.email">
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Телефон за контакт..." [(ngModel)]="reservationBindingModel.phoneNumber">
+        </div>
+        <div class="form-group">
+          <div class="form-check form-check-inline">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Прочетох общите условия
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <re-captcha (resolved)="resolved($event)" siteKey="6LeDcmUUAAAAAEerpDa6E98kTEHKNvkyQ0mjQiaO"></re-captcha>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!isSecondResStep" class="form-group">
+    <div class="col-12 col-sm-3">
+      <button class="btn btn-primary" (click)="isSecondResStep=!isSecondResStep" [disabled]="roomsIds.length === 0">Напред</button>
+    </div>
+  </div>
+  <div class="container">
+    <div *ngIf="isSecondResStep" class="form-group row">
+      <div class="col-12 col-sm-3">
+        <button (click)="onSubmit()" class="btn btn-primary">Резервация</button>
+      </div>
+      <div class="col-12 offset-sm-4 col-sm-3 offset-md-1">
+        <button class="btn btn-primary" (click)="isSecondResStep=!isSecondResStep">Назад</button>
+      </div>
+    </div>
+  </div>
+</div>
